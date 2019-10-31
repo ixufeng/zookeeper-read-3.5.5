@@ -900,6 +900,7 @@ public class FastLeaderElection implements Election {
             self.start_fle = Time.currentElapsedTime();
         }
         try {
+
             HashMap<Long, Vote> recvset = new HashMap<>();
 
             HashMap<Long, Vote> outofelection = new HashMap<>();

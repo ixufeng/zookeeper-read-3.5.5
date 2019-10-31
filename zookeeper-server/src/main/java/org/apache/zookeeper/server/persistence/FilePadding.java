@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,7 @@ package org.apache.zookeeper.server.persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -96,6 +96,7 @@ public class FilePadding {
     // VisibleForTesting
     public static long calculateFileSizeWithPadding(long position, long fileSize, long preAllocSize) {
         // If preAllocSize is positive and we are within 4KB of the known end of the file calculate a new file size
+        //文件剩余的空间小于4k
         if (preAllocSize > 0 && position + 4096 >= fileSize) {
             // If we have written more than we have previously preallocated we need to make sure the new
             // file size is larger than what we already have
@@ -108,5 +109,23 @@ public class FilePadding {
         }
 
         return fileSize;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        File file1 = new File("/Users/xufeng10/Documents/dir");
+        if (!file1.exists()) {
+            file1.mkdir();
+        }
+        File file = new File(file1,"test");
+        FileOutputStream fo = new FileOutputStream(file);
+//        fo.getChannel().write(ByteBuffer.allocate(1), 8);
+        fo.getChannel().write(ByteBuffer.wrap("w".getBytes()),17);
+        fo.getChannel().write(ByteBuffer.wrap("22".getBytes()),6);
+        fo.getChannel().write(ByteBuffer.wrap("3".getBytes()),5);
+
+        fo.flush();
+        fo.close();
+
     }
 }

@@ -423,6 +423,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
 
 
     public enum ServerState {
+        //todo OBSERVING是否处理客户端请求
         LOOKING, FOLLOWING, LEADING, OBSERVING;
     }
 
@@ -1218,6 +1219,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
              * Main loop
              */
             while (running) {
+
                 switch (getPeerState()) {
                     case LOOKING:
                         LOG.info("LOOKING");
@@ -1274,7 +1276,9 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
                                     startLeaderElection();
                                 }
                                 //设置当前的leader
-                                setCurrentVote(makeLEStrategy().lookForLeader());
+                                setCurrentVote(
+                                        makeLEStrategy().lookForLeader()
+                                );
                             } catch (Exception e) {
                                 LOG.warn("Unexpected exception", e);
                                 setPeerState(ServerState.LOOKING);

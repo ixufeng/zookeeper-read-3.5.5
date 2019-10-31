@@ -139,6 +139,7 @@ public class FileTxnSnapLog {
             checkSnapDir();
         }
 
+
         txnLog = new FileTxnLog(this.dataDir);
         snapLog = new FileSnap(this.snapDir);
     }

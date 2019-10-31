@@ -136,6 +136,8 @@ public class QuorumPeerMain {
                         config.getMaxClientCnxns(),
                         true);
             }
+
+            //实例化节点
             quorumPeer = getQuorumPeer();
 
             quorumPeer.setTxnFactory(new FileTxnSnapLog(
@@ -146,7 +148,9 @@ public class QuorumPeerMain {
             quorumPeer.enableLocalSessionsUpgrading(
                     config.isLocalSessionsUpgradingEnabled());
             //quorumPeer.setQuorumPeers(config.getAllMembers());
+            //选举方式
             quorumPeer.setElectionType(config.getElectionAlg());
+            //设置sid
             quorumPeer.setMyid(config.getServerId());
             quorumPeer.setTickTime(config.getTickTime());
             quorumPeer.setMinSessionTimeout(config.getMinSessionTimeout());
