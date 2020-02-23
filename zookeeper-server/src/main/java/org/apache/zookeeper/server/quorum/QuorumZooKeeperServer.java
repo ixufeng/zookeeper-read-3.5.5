@@ -64,11 +64,13 @@ public abstract class QuorumZooKeeperServer extends ZooKeeperServer {
         // This is called by the request processor thread (either follower
         // or observer request processor), which is unique to a learner.
         // So will not be called concurrently by two threads.
+        //不是创建命令 或者不是本地session，则直接return null
         if ((request.type != OpCode.create && request.type != OpCode.create2 && request.type != OpCode.multi) ||
             !upgradeableSessionTracker.isLocalSession(request.sessionId)) {
             return null;
         }
 
+        //todo what is multi
         if (OpCode.multi == request.type) {
             MultiTransactionRecord multiTransactionRecord = new MultiTransactionRecord();
             request.request.rewind();

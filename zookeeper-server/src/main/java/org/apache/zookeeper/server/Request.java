@@ -35,6 +35,10 @@ import org.apache.zookeeper.txn.TxnHeader;
  * onto the request as it is processed.
  */
 public class Request {
+
+    /**
+     * todo what it is
+     */
     public final static Request requestOfDeath = new Request(null, 0, 0, 0, null, null);
 
     public Request(ServerCnxn cnxn, long sessionId, int xid, int type, ByteBuffer bb, List<Id> authInfo) {

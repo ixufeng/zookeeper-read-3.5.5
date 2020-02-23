@@ -88,8 +88,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * outstandingRequests, so that it can take into account transactions that are
  * in the queue to be applied when generating a transaction.
  */
-public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
-        RequestProcessor {
+public class PrepRequestProcessor extends ZooKeeperCriticalThread implements RequestProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(PrepRequestProcessor.class);
 
     static boolean skipACL;
@@ -107,22 +106,22 @@ public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
      */
     private static boolean failCreate = false;
 
-    LinkedBlockingQueue<Request> submittedRequests = new LinkedBlockingQueue<>();
+    private LinkedBlockingQueue<Request> submittedRequests = new LinkedBlockingQueue<>();
 
     private final RequestProcessor nextProcessor;
 
     ZooKeeperServer zks;
 
-    public PrepRequestProcessor(ZooKeeperServer zks,
-                                RequestProcessor nextProcessor) {
-        super("ProcessThread(sid:" + zks.getServerId() + " cport:"
-                + zks.getClientPort() + "):", zks.getZooKeeperServerListener());
+    public PrepRequestProcessor(ZooKeeperServer zks, RequestProcessor nextProcessor) {
+        super("ProcessThread(sid:" + zks.getServerId()
+                + " cport:" + zks.getClientPort() + "):", zks.getZooKeeperServerListener());
         this.nextProcessor = nextProcessor;
         this.zks = zks;
     }
 
     /**
      * method for tests to set failCreate
+     *
      * @param b
      */
     public static void setFailCreate(boolean b) {
@@ -141,6 +140,7 @@ public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
                 if (LOG.isTraceEnabled()) {
                     ZooTrace.logRequest(LOG, traceMask, 'P', request, "");
                 }
+
                 if (Request.requestOfDeath == request) {
                     break;
                 }
@@ -194,16 +194,16 @@ public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
 
     /**
      * Grab current pending change records for each op in a multi-op.
-     *
+     * <p>
      * This is used inside MultiOp error code path to rollback in the event
      * of a failed multi-op.
      *
      * @param multiRequest
      * @return a map that contains previously existed records that probably need to be
-     *         rolled back in any failure.
+     * rolled back in any failure.
      */
     private Map<String, ChangeRecord> getPendingChanges(MultiTransactionRecord multiRequest) {
-        HashMap<String, ChangeRecord> pendingChangeRecords = new HashMap<String, ChangeRecord>();
+        HashMap<String, ChangeRecord> pendingChangeRecords = new HashMap<>();
 
         for (Op op : multiRequest) {
             String path = op.getPath();
@@ -238,7 +238,7 @@ public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
 
     /**
      * Rollback pending changes records from a failed multi-op.
-     *
+     * <p>
      * If a multi-op fails, we can't leave any invalid change records we created
      * around. We also need to restore their prior value (if any) if their prior
      * value is still valid.
@@ -286,7 +286,7 @@ public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
     /**
      * Grant or deny authorization to an operation on a node as a function of:
      *
-     * @param zks: not used.
+     * @param zks:  not used.
      * @param acl:  set of ACLs for the node
      * @param perm: the permission that the client is requesting
      * @param ids:  the credentials supplied by the client
@@ -334,6 +334,7 @@ public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
     /**
      * Performs basic validation of a path for a create request.
      * Throws if the path is not valid and returns the parent path.
+     *
      * @throws BadArgumentsException
      */
     private String validatePathForCreate(String path, long sessionId)
@@ -627,6 +628,7 @@ public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
 
     /**
      * 创建节点
+     *
      * @param type
      * @param request
      * @param record
@@ -689,8 +691,7 @@ public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
         } else if (type == OpCode.createTTL) {
             request.setTxn(new CreateTTLTxn(path, data, listACL, newCversion, ttl));
         } else {
-            request.setTxn(new CreateTxn(path, data, listACL, createMode.isEphemeral(),
-                    newCversion));
+            request.setTxn(new CreateTxn(path, data, listACL, createMode.isEphemeral(), newCversion));
         }
         StatPersisted s = new StatPersisted();
         if (createMode.isEphemeral()) {
@@ -699,6 +700,7 @@ public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
         parentRecord = parentRecord.duplicate(request.getHdr().getZxid());
         parentRecord.childCount++;
         parentRecord.stat.setCversion(newCversion);
+        //
         addChangeRecord(parentRecord);
         addChangeRecord(new ChangeRecord(request.getHdr().getZxid(), path, s, 0, listACL));
     }
@@ -954,7 +956,7 @@ public class PrepRequestProcessor extends ZooKeeperCriticalThread implements
      * depend on the requestor's authentication information.
      *
      * @param authInfo list of ACL IDs associated with the client connection
-     * @param acls list of ACLs being assigned to the node (create or setACL operation)
+     * @param acls     list of ACLs being assigned to the node (create or setACL operation)
      * @return verified and expanded ACLs
      * @throws KeeperException.InvalidACLException
      */

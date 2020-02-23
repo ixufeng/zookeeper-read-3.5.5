@@ -932,7 +932,7 @@ public class QuorumPeer extends ZooKeeperThread implements QuorumStats.Provider 
         }
         //并不是真正的开始选举，而是构建选举类 LeaderElection
         startLeaderElection();
-        //启动线程，调用run方法，核心的选举逻辑
+        //启动线程，调用run方法(line-1184)，核心的选举逻辑
         super.start();
     }
 

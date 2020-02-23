@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,14 +35,14 @@ import org.apache.zookeeper.txn.TxnHeader;
 
 /**
  * Just like the standard ZooKeeperServer. We just replace the request
- * processors: FollowerRequestProcessor -> CommitProcessor ->
- * FinalRequestProcessor
+ * processors:
+ * FollowerRequestProcessor -> CommitProcessor -> FinalRequestProcessor
  *
  * A SyncRequestProcessor is also spawned off to log proposals from the leader.
  */
 public class FollowerZooKeeperServer extends LearnerZooKeeperServer {
     private static final Logger LOG =
-        LoggerFactory.getLogger(FollowerZooKeeperServer.class);
+            LoggerFactory.getLogger(FollowerZooKeeperServer.class);
 
     /*
      * Pending sync requests
@@ -50,18 +50,16 @@ public class FollowerZooKeeperServer extends LearnerZooKeeperServer {
     ConcurrentLinkedQueue<Request> pendingSyncs;
 
     /**
-     * @param port
-     * @param dataDir
      * @throws IOException
      */
-    FollowerZooKeeperServer(FileTxnSnapLog logFactory,QuorumPeer self,
-            ZKDatabase zkDb) throws IOException {
+    FollowerZooKeeperServer(FileTxnSnapLog logFactory, QuorumPeer self,
+                            ZKDatabase zkDb) throws IOException {
         super(logFactory, self.tickTime, self.minSessionTimeout,
                 self.maxSessionTimeout, zkDb, self);
         this.pendingSyncs = new ConcurrentLinkedQueue<Request>();
     }
 
-    public Follower getFollower(){
+    public Follower getFollower() {
         return self.follower;
     }
 
@@ -74,7 +72,7 @@ public class FollowerZooKeeperServer extends LearnerZooKeeperServer {
         firstProcessor = new FollowerRequestProcessor(this, commitProcessor);
         ((FollowerRequestProcessor) firstProcessor).start();
         syncProcessor = new SyncRequestProcessor(this,
-                new SendAckRequestProcessor((Learner)getFollower()));
+                new SendAckRequestProcessor((Learner) getFollower()));
         syncProcessor.start();
     }
 
@@ -111,14 +109,14 @@ public class FollowerZooKeeperServer extends LearnerZooKeeperServer {
         commitProcessor.commit(request);
     }
 
-    synchronized public void sync(){
-        if(pendingSyncs.size() ==0){
+    synchronized public void sync() {
+        if (pendingSyncs.size() == 0) {
             LOG.warn("Not expecting a sync.");
             return;
         }
 
         Request r = pendingSyncs.remove();
-		commitProcessor.commit(r);
+        commitProcessor.commit(r);
     }
 
     @Override

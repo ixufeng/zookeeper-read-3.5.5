@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,15 +33,13 @@ import org.slf4j.LoggerFactory;
  * directly to the leader should go through this processor.
  */
 public class LeaderRequestProcessor implements RequestProcessor {
-    private static final Logger LOG = LoggerFactory
-            .getLogger(LeaderRequestProcessor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LeaderRequestProcessor.class);
 
     private final LeaderZooKeeperServer lzks;
 
     private final RequestProcessor nextProcessor;
 
-    public LeaderRequestProcessor(LeaderZooKeeperServer zks,
-            RequestProcessor nextProcessor) {
+    public LeaderRequestProcessor(LeaderZooKeeperServer zks, RequestProcessor nextProcessor) {
         this.lzks = zks;
         this.nextProcessor = nextProcessor;
     }
@@ -51,6 +49,7 @@ public class LeaderRequestProcessor implements RequestProcessor {
             throws RequestProcessorException {
         // Check if this is a local session and we are trying to create
         // an ephemeral node, in which case we upgrade the session
+        //临时节点则升级session
         Request upgradeRequest = null;
         try {
             upgradeRequest = lzks.checkUpgradeSession(request);

@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@
 package org.apache.zookeeper;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -28,14 +29,14 @@ import org.apache.zookeeper.data.Id;
 
 @InterfaceAudience.Public
 public class ZooDefs {
-   
-   final public static String CONFIG_NODE = "/zookeeper/config";
 
-   @InterfaceAudience.Public
+    final public static String CONFIG_NODE = "/zookeeper/config";
+
+    @InterfaceAudience.Public
     public interface OpCode {
-        public final int notification = 0;
+        int notification = 0;
 
-        public final int create = 1;
+        int create = 1;
 
         public final int delete = 2;
 
@@ -60,7 +61,7 @@ public class ZooDefs {
         public final int check = 13;
 
         public final int multi = 14;
-        
+
         public final int create2 = 15;
 
         public final int reconfig = 16;
@@ -139,7 +140,7 @@ public class ZooDefs {
                         .singletonList(new ACL(Perms.READ, ANYONE_ID_UNSAFE)));
     }
 
-    final public static String[] opNames = { "notification", "create",
+    final public static String[] opNames = {"notification", "create",
             "delete", "exists", "getData", "setData", "getACL", "setACL",
-            "getChildren", "getChildren2", "getMaxChildren", "setMaxChildren", "ping", "reconfig", "getConfig" };
+            "getChildren", "getChildren2", "getMaxChildren", "setMaxChildren", "ping", "reconfig", "getConfig"};
 }
